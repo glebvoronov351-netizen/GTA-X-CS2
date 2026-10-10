@@ -1,0 +1,19 @@
+name: Build CS2Mode.asi
+on: [push, workflow_dispatch]
+jobs:
+  build:
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v4
+      - name: Show SDK files
+        shell: cmd
+        run: dir /s /b sdk
+      - name: Compile
+        shell: cmd
+        run: |
+          call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          cl /nologo /LD /O2 /EHsc /MT /std:c++17 /I sdk\inc src\main.cpp /Fe:CS2Mode.asi /link sdk\lib\ScriptHookV.lib user32.lib
+      - uses: actions/upload-artifact@v4
+        with:
+          name: CS2Mode-asi
+          path: CS2Mode.asi
